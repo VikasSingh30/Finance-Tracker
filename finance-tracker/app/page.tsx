@@ -18,35 +18,54 @@ import {
   getSpendingInsights 
 } from '../utils/dataProcessing';
 
-const PersonalFinanceTracker = () => {
+const STORAGE_KEYS = {
+  transactions: 'financeApp_transactions',
+  budgets: 'financeApp_budgets',
+};
+
+const FinanceTracker = () => {
   const [transactions, setTransactions] = useState([]);
   const [budgets, setBudgets] = useState({});
   const [currentView, setCurrentView] = useState('dashboard');
   const [editingTransaction, setEditingTransaction] = useState(null);
 
+ 
   useEffect(() => {
-    setTransactions(SAMPLE_TRANSACTIONS);
-    setBudgets(SAMPLE_BUDGETS);
+    const storedTransactions = localStorage.getItem(STORAGE_KEYS.transactions);
+    const storedBudgets = localStorage.getItem(STORAGE_KEYS.budgets);
+
+    setTransactions(storedTransactions ? JSON.parse(storedTransactions) : SAMPLE_TRANSACTIONS);
+    setBudgets(storedBudgets ? JSON.parse(storedBudgets) : SAMPLE_BUDGETS);
   }, []);
+
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.transactions, JSON.stringify(transactions));
+  }, [transactions]);
+
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.budgets, JSON.stringify(budgets));
+  }, [budgets]);
 
   const handleAddTransaction = (transaction) => {
     const newTransaction = {
-      id: Date.now(), // In real app, this would be MongoDB ObjectId
+      id: Date.now(),
       ...transaction,
-      amount: parseFloat(transaction.amount)
+      amount: parseFloat(transaction.amount),
     };
-    setTransactions(prev => [...prev, newTransaction]);
+    setTransactions((prev) => [...prev, newTransaction]);
   };
 
   const handleUpdateTransaction = (updatedTransaction) => {
-    setTransactions(prev => 
-      prev.map(t => t.id === updatedTransaction.id ? updatedTransaction : t)
+    setTransactions((prev) =>
+      prev.map((t) => (t.id === updatedTransaction.id ? updatedTransaction : t))
     );
     setEditingTransaction(null);
   };
 
   const handleDeleteTransaction = (id) => {
-    setTransactions(prev => prev.filter(t => t.id !== id));
+    setTransactions((prev) => prev.filter((t) => t.id !== id));
   };
 
   const handleEditTransaction = (transaction) => {
@@ -55,21 +74,20 @@ const PersonalFinanceTracker = () => {
   };
 
   const handleBudgetUpdate = (category, amount) => {
-    setBudgets(prev => ({
+    setBudgets((prev) => ({
       ...prev,
-      [category]: parseFloat(amount)
+      [category]: parseFloat(amount),
     }));
   };
 
   const handleBudgetDelete = (category) => {
-    setBudgets(prev => {
+    setBudgets((prev) => {
       const newBudgets = { ...prev };
       delete newBudgets[category];
       return newBudgets;
     });
   };
 
-  // Processed data
   const totalExpenses = transactions.reduce((sum, t) => sum + t.amount, 0);
   const monthlyExpenses = getMonthlyExpenses(transactions);
   const categoryExpenses = getCategoryExpenses(transactions);
@@ -81,9 +99,9 @@ const PersonalFinanceTracker = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="container mx-auto px-4 py-8">
         <Header />
-        
-        <Navigation 
-          currentView={currentView} 
+
+        <Navigation
+          currentView={currentView}
           setCurrentView={setCurrentView}
           onCancelEdit={() => setEditingTransaction(null)}
         />
@@ -139,4 +157,4 @@ const PersonalFinanceTracker = () => {
   );
 };
 
-export default PersonalFinanceTracker;
+export default FinanceTracker;

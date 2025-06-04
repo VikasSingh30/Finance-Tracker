@@ -1,4 +1,6 @@
-const EXAMPLE_TRANSACTIONS = [
+
+
+export const SAMPLE_TRANSACTIONS = [
   { id: 1, amount: 45.50, date: '2025-05-20', description: 'Grocery shopping at Whole Foods', category: 'Food & Dining' },
   { id: 2, amount: 12.99, date: '2025-05-19', description: 'Netflix subscription', category: 'Entertainment' },
   { id: 3, amount: 85.00, date: '2025-05-18', description: 'Gas station fill-up', category: 'Transportation' },
@@ -26,7 +28,7 @@ const EXAMPLE_TRANSACTIONS = [
   { id: 25, amount: 68.99, date: '2025-03-20', description: 'New books', category: 'Education' }
 ];
 
-const EXAMPLE_BUDGETS = {
+export const SAMPLE_BUDGETS = {
   'Food & Dining': 500,
   'Transportation': 300,
   'Shopping': 200,
