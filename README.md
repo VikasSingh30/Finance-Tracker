@@ -35,19 +35,19 @@ A **Personal Finance Tracker** web app built with **Next.js** and **React** that
 
 ## 🔍 Project Structure
 /app<br>
-  ├─ page.tsx # Main page & logic<br>
+  ├─ page.tsx               # Main page & logic<br>
 /components<br>
-  ├─ Header.tsx # Header component<br>
-  ├─ Navigation.tsx # Navigation bar<br>
-  ├─ Dashboard.tsx # Dashboard visualization<br>
-  ├─ TransactionForm.tsx # Add/edit transaction form<br>
-  ├─ TransactionsList.tsx # List of transactions<br>
-  ├─ BudgetsView.tsx # Budget management UI<br>
-  └─ InsightsView.tsx # Insights & analysis <br>
-/utils
-  ├─ sampledata.ts # Sample transactions & budgets<br>
-  ├─ constants.ts # Categories & color constants<br>
-  └─ dataProcessing.ts # Helper functions for data calculations<br>
+  ├─ Header.tsx             # Header component<br>
+  ├─ Navigation.tsx         # Navigation bar<br>
+  ├─ Dashboard.tsx          # Dashboard visualization<br>
+  ├─ TransactionForm.tsx    # Add/edit transaction form<br>
+  ├─ TransactionsList.tsx   # List of transactions<br>
+  ├─ BudgetsView.tsx        # Budget management UI<br>
+  └─ InsightsView.tsx       # Insights & analysis <br>
+/utils<br>
+  ├─ sampledata.ts          # Sample transactions & budgets<br>
+  ├─ constants.ts           # Categories & color constants<br>
+  └─ dataProcessing.ts      # Helper functions for data calculations<br>
 
 ---
 
