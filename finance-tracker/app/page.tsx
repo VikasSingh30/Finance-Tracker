@@ -9,7 +9,6 @@ import TransactionForm from '../components/TransactionForm';
 import TransactionsList from '../components/TransactionsList';
 import BudgetsView from '../components/BudgetsView';
 import InsightsView from '../components/InsightsView';
-import { CATEGORIES, CATEGORY_COLORS } from '../utils/constants';
 import { 
   getMonthlyExpenses, 
   getCategoryExpenses, 
@@ -18,18 +17,29 @@ import {
   getSpendingInsights 
 } from '../utils/dataProcessing';
 
+type Transaction = {
+  id: number;
+  name: string;
+  amount: number;
+  category: string;
+  date?: string;
+};
+
+type Budgets = {
+  [category: string]: number;
+};
+
 const STORAGE_KEYS = {
   transactions: 'financeApp_transactions',
   budgets: 'financeApp_budgets',
 };
 
 const FinanceTracker = () => {
-  const [transactions, setTransactions] = useState([]);
-  const [budgets, setBudgets] = useState({});
-  const [currentView, setCurrentView] = useState('dashboard');
-  const [editingTransaction, setEditingTransaction] = useState(null);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [budgets, setBudgets] = useState<Budgets>({});
+  const [currentView, setCurrentView] = useState<'dashboard' | 'add-transaction' | 'transactions' | 'budgets' | 'insights'>('dashboard');
+  const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
 
- 
   useEffect(() => {
     const storedTransactions = localStorage.getItem(STORAGE_KEYS.transactions);
     const storedBudgets = localStorage.getItem(STORAGE_KEYS.budgets);
@@ -38,49 +48,47 @@ const FinanceTracker = () => {
     setBudgets(storedBudgets ? JSON.parse(storedBudgets) : SAMPLE_BUDGETS);
   }, []);
 
-
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.transactions, JSON.stringify(transactions));
   }, [transactions]);
-
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.budgets, JSON.stringify(budgets));
   }, [budgets]);
 
-  const handleAddTransaction = (transaction) => {
-    const newTransaction = {
+  const handleAddTransaction = (transaction: Omit<Transaction, 'id'>) => {
+    const newTransaction: Transaction = {
       id: Date.now(),
       ...transaction,
-      amount: parseFloat(transaction.amount),
+      amount: parseFloat(transaction.amount.toString()),
     };
     setTransactions((prev) => [...prev, newTransaction]);
   };
 
-  const handleUpdateTransaction = (updatedTransaction) => {
+  const handleUpdateTransaction = (updatedTransaction: Transaction) => {
     setTransactions((prev) =>
       prev.map((t) => (t.id === updatedTransaction.id ? updatedTransaction : t))
     );
     setEditingTransaction(null);
   };
 
-  const handleDeleteTransaction = (id) => {
+  const handleDeleteTransaction = (id: number) => {
     setTransactions((prev) => prev.filter((t) => t.id !== id));
   };
 
-  const handleEditTransaction = (transaction) => {
+  const handleEditTransaction = (transaction: Transaction) => {
     setEditingTransaction(transaction);
     setCurrentView('add-transaction');
   };
 
-  const handleBudgetUpdate = (category, amount) => {
+  const handleBudgetUpdate = (category: string, amount: number) => {
     setBudgets((prev) => ({
       ...prev,
-      [category]: parseFloat(amount),
+      [category]: parseFloat(amount.toString()),
     }));
   };
 
-  const handleBudgetDelete = (category) => {
+  const handleBudgetDelete = (category: string) => {
     setBudgets((prev) => {
       const newBudgets = { ...prev };
       delete newBudgets[category];
